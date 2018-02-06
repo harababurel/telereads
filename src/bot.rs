@@ -10,7 +10,7 @@ pub struct Bot {}
 
 impl Bot {
     fn get<T: DeserializeOwned>(method: &str) -> Result<TelegramResult<T>, reqwest::Error> {
-        let mut url = String::from("https://api.telegram.org/bot536722142:AAFTsVGNVt6vVqFFeF49vjO3drfXxG64m-8");
+        let mut url = String::from("https://api.telegram.org/API_KEY");
         url.push_str(&method);
 
         let mut resp = reqwest::get(&url)?;
@@ -20,7 +20,7 @@ impl Bot {
     }
 
     fn post<P: Serialize, T: DeserializeOwned>(method: &str, payload: &P) -> Result<TelegramResult<T>, reqwest::Error> {
-        let mut url = String::from("https://api.telegram.org/bot536722142:AAFTsVGNVt6vVqFFeF49vjO3drfXxG64m-8");
+        let mut url = String::from("https://api.telegram.org/API_KEY");
         url.push_str(&method);
 
         println!("payload is:\n{}", serde_json::to_string_pretty(payload).unwrap());
