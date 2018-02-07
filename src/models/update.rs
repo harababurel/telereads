@@ -2,7 +2,7 @@ use super::{Message, InlineQuery, ChosenInlineQuery, CallbackQuery, ShippingQuer
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Update {
-    pub update_id: u32,
+    pub update_id: u64,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<Message>,

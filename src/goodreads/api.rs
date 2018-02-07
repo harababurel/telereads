@@ -17,7 +17,6 @@ impl GoodreadsApi {
     fn get(&self, url: &str, params: &[(&str, &str)]) -> Result<GoodreadsResponse, GoodreadsError> {
         let url = reqwest::Url::parse_with_params(url, params)?;
 
-
         let mut resp = retry::retry(3,
                                     500,
                                     || reqwest::get(url.to_owned()),

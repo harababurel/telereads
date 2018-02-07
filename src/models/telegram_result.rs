@@ -9,8 +9,12 @@ impl<T> TelegramResult<T> {
         self.ok
     }
 
-    pub fn get(self) -> T {
+    pub fn unwrap(self) -> T {
         self.result
+    }
+
+    pub fn get_ref(&self) -> &T {
+        &self.result
     }
 }
 

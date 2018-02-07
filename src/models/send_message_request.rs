@@ -9,7 +9,7 @@ pub struct SendMessageRequest {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub disable_notification: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub reply_to_message_id: Option<u32>,
+    pub reply_to_message_id: Option<u64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reply_markup: Option<ReplyMarkup>,
 }
