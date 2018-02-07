@@ -8,6 +8,7 @@ extern crate serde_derive;
 extern crate serde_xml_rs;
 extern crate number_prefix;
 
-pub mod models;
-pub mod telegram_bot;
-pub mod goodreads;
+mod goodreads;
+mod telegram;
+
+pub use telegram::TelegramBot;

@@ -2,7 +2,8 @@ use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use serde_json;
-use models::{TelegramResult, SendMessageRequest, User, Update, Message, InlineQuery, AnswerInlineQuery, InlineQueryResult};
+use telegram::models::{SendMessageRequest, User, Update, Message, InlineQuery, AnswerInlineQuery, InlineQueryResult};
+use telegram::TelegramResult;
 use goodreads::GoodreadsApi;
 use std;
 

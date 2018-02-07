@@ -1,6 +1,6 @@
 extern crate telereads;
 
-use telereads::telegram_bot::TelegramBot;
+use telereads::TelegramBot;
 
 fn main() {
     let telegram_token = std::env::var("TELEGRAM_TOKEN")
