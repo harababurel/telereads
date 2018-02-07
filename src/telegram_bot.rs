@@ -25,7 +25,7 @@ impl TelegramBot {
 
     pub fn run(&mut self) {
         loop {
-            match self.get_updates(): Result<TelegramResult<Vec<Update>>, reqwest::Error> {
+            match self.get_updates() {
                 Ok(result) => {
                     println!("Found result: {:?}", result);
 
@@ -55,22 +55,15 @@ impl TelegramBot {
                 }
                 Err(e) => println!("Something bad: {:?}", e),
             };
-
-            std::thread::sleep(std::time::Duration::new(1, 0));
         }
     }
 
     fn get<T>(&self, method: &str) -> Result<TelegramResult<T>, reqwest::Error>
         where T: DeserializeOwned {
-        let url = format!("https://api.telegram.org/bot{token}{method}",
-                          token = self.token,
-                          method = method);
-        println!("GET-ing {}", &url);
-
-        let mut response = reqwest::get(&url)?;
-        let result: TelegramResult<T> = response.json()?;
-
-        Ok(result)
+        Ok(self.client.get(&format!("https://api.telegram.org/bot{}{}", self.token, method))
+            .query(&[("timeout", 20)])
+            .send()?
+            .json()?)
     }
 
     fn post<P, T>(&self, method: &str, payload: &P) -> Result<TelegramResult<T>, reqwest::Error>
