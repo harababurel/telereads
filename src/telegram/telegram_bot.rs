@@ -114,7 +114,7 @@ impl TelegramBot {
         match self.goodreads.get_books(&query.query) {
             Ok(works) => {
                 info!("Received {} books from Goodreads", works.len());
-                let results = works.iter().take(1000).map(|work| {
+                let results = works.iter().map(|work| {
                     InlineQueryResult::from(work)
                 }).collect();
 
