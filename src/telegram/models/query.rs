@@ -2,6 +2,8 @@ use super::{User, Location};
 use number_prefix::{decimal_prefix, Standalone, Prefixed};
 use std::convert::From;
 use goodreads::Work;
+use ammonia::clean;
+use ammonia::url::Url;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InlineQuery {
@@ -18,6 +20,8 @@ pub struct InlineQuery {
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct AnswerInlineQuery {
     pub inline_query_id: String,
+
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub results: Vec<InlineQueryResult>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -84,11 +88,13 @@ pub enum InlineQueryResult {
 
 impl<'a> From<&'a Work> for InlineQueryResult {
     fn from(work: &'a Work) -> Self {
-        let book_url = format!("https://www.goodreads.com/book/title?id={}",
-                               &str::replace(&work.best_book.title, " ", "%2B"));
+        let book_url = Url::parse_with_params(
+            "https://www.goodreads.com/book/title", &[("id", &work.best_book.title)])
+            .unwrap_or(Url::parse("https://www.goodreads.com").unwrap());
 
-        let author_url = format!("https://www.goodreads.com/book/author?id={}",
-                                 &str::replace(&work.best_book.author.name, " ", "+"));
+        let author_url = Url::parse(
+            &format!("https://www.goodreads.com/book/author/{}", &work.best_book.author.name))
+            .unwrap_or(Url::parse("https://www.goodreads.com").unwrap());
 
         let rating = match work.average_rating {
             Some(value) => format!("{:.1}", value),
@@ -100,14 +106,14 @@ impl<'a> From<&'a Work> for InlineQueryResult {
             Prefixed(prefix, n) => format!("{:.0}{}", n, prefix),
         };
 
-        let message_text = format!("<a href=\"{book_url}\">{title}</a>\nAuthor: <a href=\"{author_url}\">{author}</a>\nAvg. {rating}/5 ({rating_count} ratings)",
-                                   book_url = book_url,
-                                   author_url = author_url,
-                                   title = &work.best_book.title,
-                                   author = &work.best_book.author.name,
-                                   rating = rating,
-                                   rating_count = rating_count);
-
+        let message_text = clean(&format!("<a href=\"{book_url}\">{title}</a>\nAuthor: \
+        <a href=\"{author_url}\">{author}</a>\nAvg. {rating}/5 ({rating_count} ratings)",
+                                          book_url = book_url,
+                                          author_url = author_url,
+                                          title = &work.best_book.title,
+                                          author = &work.best_book.author.name,
+                                          rating = rating,
+                                          rating_count = rating_count));
 
         let description = format!("{author}\n{rating}/5 ({rating_count} ratings)",
                                   author = work.best_book.author.name,
@@ -119,12 +125,12 @@ impl<'a> From<&'a Work> for InlineQueryResult {
             id: work.id.to_string(),
             title: work.best_book.title.clone(),
             input_message_content: InputMessageContent::InputTextMessageContent {
-                message_text: message_text,
+                message_text,
                 parse_mode: Some(String::from("HTML")),
                 disable_web_page_preview: None,
             },
             reply_markup: None,
-            url: Some(book_url),
+            url: Some(book_url.to_string()),
             hide_url: Some(true),
             description: Some(description),
             thumb_url: Some(work.best_book.small_image_url.clone()),

@@ -4,7 +4,10 @@ version = "0.1.0"
 authors = ["Sergiu Puscas <srg.pscs@gmail.com>"]
 
 [dependencies]
+ammonia = "1.0.1"
+log = "0.4"
 number_prefix = "0.2.7"
+pretty_env_logger = "0.2.1"
 retry = "0.4.0"
 reqwest = "0.8.4"
 serde = "1.0.27"

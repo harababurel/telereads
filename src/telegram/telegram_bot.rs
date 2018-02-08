@@ -6,6 +6,7 @@ use telegram::models::{SendMessageRequest, User, Update, Message, InlineQuery, A
 use telegram::TelegramResult;
 use goodreads::GoodreadsApi;
 use std;
+use std::fmt::Debug;
 
 pub struct TelegramBot {
     token: String,
@@ -28,49 +29,58 @@ impl TelegramBot {
         loop {
             match self.get_updates() {
                 Ok(result) => {
-                    println!("Found result: {:?}", result);
+//                    println!("Found result: {:?}", result);
+
+                    if !result.ok() {
+                        continue;
+                    }
 
                     for update in result.unwrap() {
-                        println!("Found update:\n{}", serde_json::to_string_pretty(&update).unwrap());
+//                        println!("Found update:\n{}", serde_json::to_string_pretty(&update).unwrap());
 
                         if update.inline_query.is_some() {
                             update.inline_query.map(|query| {
-                                print!("Answering inline query...");
                                 match self.answer_inline_query(query) {
-                                    Ok(success) => println!(" Answer sent! Success = {}", success),
-                                    Err(e) => println!(" Could not answer inline query: {:#?}", e),
+                                    Ok(success) => info!("Answer sent! Success = {}", success),
+                                    Err(e) => error!("Could not answer inline query: {:#?}", e),
                                 };
                             });
                         }
 
                         if update.message.is_some() {
                             update.message.map(|message| {
-                                print!("Answering message...");
+//                                print!("Answering message...");
                                 match self.send_message(message.chat.id, "unrecognized command") {
-                                    Ok(message) => println!("OK! Message: {:#?}", message),
-                                    Err(e) => println!("Could not answer message: {:#?}", e),
+                                    Ok(message) => {} //println!("OK! Message: {:#?}", message),
+                                    Err(e) => {} //println!("Could not answer message: {:#?}", e),
                                 };
                             });
                         }
                     }
                 }
-                Err(e) => println!("Something bad: {:?}", e),
+                Err(e) => {} //println!("Something bad: {:?}", e),
             };
         }
     }
 
     fn get<T>(&self, method: &str) -> Result<TelegramResult<T>, reqwest::Error>
-        where T: DeserializeOwned {
-        Ok(self.client.get(&format!("https://api.telegram.org/bot{}{}", self.token, method))
+        where T: DeserializeOwned + Default {
+        let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
+        info!("GET-ing {}", &url);
+
+        Ok(self.client.get(&url)
             .query(&[("timeout", 20)])
             .send()?
             .json()?)
     }
 
     fn post<P, T>(&self, method: &str, payload: &P) -> Result<TelegramResult<T>, reqwest::Error>
-        where P: Serialize,
-              T: DeserializeOwned {
-        Ok(self.client.post(&format!("https://api.telegram.org/bot{}{}", self.token, method))
+        where P: Serialize + Debug,
+              T: DeserializeOwned + Default {
+        let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
+        info!("POST-ing {}", &url);
+
+        Ok(self.client.post(&url)
             .json(payload)
             .send()?
             .json()?)
@@ -103,23 +113,33 @@ impl TelegramBot {
     pub fn answer_inline_query(&self, query: InlineQuery) -> Result<bool, reqwest::Error> {
         match self.goodreads.get_books(&query.query) {
             Ok(works) => {
-                let results = works.iter().map(|work| {
+                info!("Received {} books from Goodreads", works.len());
+                let results = works.iter().take(1000).map(|work| {
                     InlineQueryResult::from(work)
                 }).collect();
 
                 let answer = AnswerInlineQuery {
                     inline_query_id: query.id,
-                    results: results,
+                    results,
                     ..Default::default()
                 };
 
-                match self.post("/answerInlineQuery", &answer) {
-                    Ok(result) => Ok(result.unwrap()),
-                    Err(e) => Err(e),
+                match self.post("/answerInlineQuery", &answer): Result<TelegramResult<bool>, reqwest::Error> {
+                    Ok(result) => {
+                        info!("Received a response from /answerInlineQuery: ok = {:#?}", &result.ok());
+                        if result.has_description() {
+                            info!("description = {}", &result.description.as_ref().unwrap());
+                        }
+                        Ok(result.ok())
+                    }
+                    Err(e) => {
+                        error!("Did not receive a response from /answerInlineQuery. Error:\n{:#?}", &e);
+                        Err(e)
+                    }
                 }
             }
             Err(e) => {
-                println!("Goodreads error: {:?}", e);
+                error!("Goodreads error: {:?}", e);
                 Ok(false)
             }
         }
