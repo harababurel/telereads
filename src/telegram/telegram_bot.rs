@@ -49,10 +49,9 @@ impl TelegramBot {
 
                         if update.message.is_some() {
                             update.message.map(|message| {
-//                                print!("Answering message...");
-                                match self.send_message(message.chat.id, "unrecognized command") {
-                                    Ok(message) => {} //println!("OK! Message: {:#?}", message),
-                                    Err(e) => {} //println!("Could not answer message: {:#?}", e),
+                                match self.send_message(message.chat.id, "@TelereadsBot allows you to search for books on Goodreads and quickly send them to your chat partner.\n\nJust type @TelereadsBot in any chat, followed by a query (<i>i.e.</i> book title, ISBN, or author name), without pressing 'send'. You can choose any result from the pop-up window that will show up and send it by simply clicking on it.\n\nFor instance, try typing <code>@TelereadsBot lord of the rings</code> in this chat, and wait for the results to appear.") {
+                                    Ok(_) => info!("Message successfully sent."),
+                                    Err(e) => error!("Could not send message: {:#?}", e),
                                 };
                             });
                         }
@@ -79,6 +78,7 @@ impl TelegramBot {
               T: DeserializeOwned + Default {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
         info!("POST-ing {}", &url);
+        debug!("Payload:\n{:#?}", &payload);
 
         Ok(self.client.post(&url)
             .json(payload)
@@ -145,16 +145,14 @@ impl TelegramBot {
         }
     }
 
-    pub fn send_message(&self, chat_id: u64, text: &str) -> Result<Message, reqwest::Error> {
+    pub fn send_message(&self, chat_id: u64, text: &str) -> Result<TelegramResult<Message>, reqwest::Error> {
         let request = SendMessageRequest {
             chat_id,
             text: String::from(text),
+            parse_mode: Some(String::from("HTML")),
             ..Default::default()
         };
 
-        match self.post("/sendMessage", &request) {
-            Ok(result) => Ok(result.unwrap()),
-            Err(e) => Err(e)
-        }
+        self.post("/sendMessage", &request) 
     }
 }

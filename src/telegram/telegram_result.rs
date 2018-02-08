@@ -2,7 +2,7 @@
 pub struct TelegramResult<T> {
     ok: bool,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none", default)]
     pub description: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none", default)]
