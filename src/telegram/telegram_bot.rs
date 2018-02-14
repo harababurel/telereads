@@ -35,6 +35,10 @@ impl TelegramBot {
                     for update in result.unwrap() {
                         if update.inline_query.is_some() {
                             update.inline_query.map(|query| {
+                                info!("Received inline query from {user}: \"{message}\"",
+                                      user = &query.from.full_name(),
+                                      message = &query.query);
+
                                 match self.answer_inline_query(query) {
                                     Ok(success) => info!("Answer sent! Success = {}", success),
                                     Err(e) => error!("Could not answer inline query: {:#?}", e),

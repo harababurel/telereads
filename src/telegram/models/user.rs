@@ -13,3 +13,14 @@ pub struct User {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub language_code: Option<String>,
 }
+
+impl User {
+    pub fn full_name(&self) -> String {
+        format!("{first_name}{last_name}",
+                first_name = self.first_name,
+                last_name = match self.last_name {
+                    Some(ref name) => format!(" {}", name),
+                    None => String::new(),
+                })
+    }
+}

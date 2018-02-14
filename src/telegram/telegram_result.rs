@@ -16,7 +16,7 @@ impl<T> TelegramResult<T>
     pub fn ok(&self) -> bool {
         if self.ok && !self.result.is_some() {
             error!("TelegramResult is ok but the content is missing!");
-            error!("{:?}", self);
+            error!("{:#?}", self);
         }
 
         self.ok && self.result.is_some()
