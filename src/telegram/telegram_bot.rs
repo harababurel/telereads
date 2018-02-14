@@ -1,7 +1,6 @@
 use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
-use serde_json;
 use telegram::models::{SendMessageRequest, User, Update, Message, InlineQuery, AnswerInlineQuery, InlineQueryResult};
 use telegram::TelegramResult;
 use goodreads::GoodreadsApi;
@@ -29,15 +28,11 @@ impl TelegramBot {
         loop {
             match self.get_updates() {
                 Ok(result) => {
-//                    println!("Found result: {:?}", result);
-
                     if !result.ok() {
                         continue;
                     }
 
                     for update in result.unwrap() {
-//                        println!("Found update:\n{}", serde_json::to_string_pretty(&update).unwrap());
-
                         if update.inline_query.is_some() {
                             update.inline_query.map(|query| {
                                 match self.answer_inline_query(query) {
@@ -57,13 +52,13 @@ impl TelegramBot {
                         }
                     }
                 }
-                Err(e) => {} //println!("Something bad: {:?}", e),
+                Err(e) => error!("get_updates() failed: {:#?}", e),
             };
         }
     }
 
     fn get<T>(&self, method: &str) -> Result<TelegramResult<T>, reqwest::Error>
-        where T: DeserializeOwned + Default {
+        where T: DeserializeOwned + Debug + Default {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
         info!("GET-ing {}", &url);
 
@@ -75,7 +70,7 @@ impl TelegramBot {
 
     fn post<P, T>(&self, method: &str, payload: &P) -> Result<TelegramResult<T>, reqwest::Error>
         where P: Serialize + Debug,
-              T: DeserializeOwned + Default {
+              T: DeserializeOwned + Debug + Default {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
         info!("POST-ing {}", &url);
         debug!("Payload:\n{:#?}", &payload);
@@ -153,6 +148,6 @@ impl TelegramBot {
             ..Default::default()
         };
 
-        self.post("/sendMessage", &request) 
+        self.post("/sendMessage", &request)
     }
 }
