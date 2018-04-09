@@ -1,7 +1,8 @@
 use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
-use telegram::models::{SendMessageRequest, User, Update, Message, InlineQuery, AnswerInlineQuery, InlineQueryResult};
+use telegram::models::{AnswerInlineQuery, InlineQuery, InlineQueryResult, Message,
+                       SendMessageRequest, Update, User};
 use telegram::TelegramResult;
 use goodreads::GoodreadsApi;
 use std;
@@ -35,9 +36,11 @@ impl TelegramBot {
                     for update in result.unwrap() {
                         if update.inline_query.is_some() {
                             update.inline_query.map(|query| {
-                                info!("Received inline query from {user}: \"{message}\"",
-                                      user = &query.from.full_name(),
-                                      message = &query.query);
+                                info!(
+                                    "Received inline query from {user}: \"{message}\"",
+                                    user = &query.from.full_name(),
+                                    message = &query.query
+                                );
 
                                 match self.answer_inline_query(query) {
                                     Ok(success) => info!("Answer sent! Success = {}", success),
@@ -62,27 +65,29 @@ impl TelegramBot {
     }
 
     fn get<T>(&self, method: &str) -> Result<TelegramResult<T>, reqwest::Error>
-        where T: DeserializeOwned + Debug + Default {
+    where
+        T: DeserializeOwned + Debug + Default,
+    {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
         info!("GET-ing {}", &url);
 
-        Ok(self.client.get(&url)
+        Ok(self.client
+            .get(&url)
             .query(&[("timeout", 20)])
             .send()?
             .json()?)
     }
 
     fn post<P, T>(&self, method: &str, payload: &P) -> Result<TelegramResult<T>, reqwest::Error>
-        where P: Serialize + Debug,
-              T: DeserializeOwned + Debug + Default {
+    where
+        P: Serialize + Debug,
+        T: DeserializeOwned + Debug + Default,
+    {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
         info!("POST-ing {}", &url);
         debug!("Payload:\n{:#?}", &payload);
 
-        Ok(self.client.post(&url)
-            .json(payload)
-            .send()?
-            .json()?)
+        Ok(self.client.post(&url).json(payload).send()?.json()?)
     }
 
     pub fn get_me(&self) -> Result<TelegramResult<User>, reqwest::Error> {
@@ -90,20 +95,27 @@ impl TelegramBot {
     }
 
     pub fn get_updates(&mut self) -> Result<TelegramResult<Vec<Update>>, reqwest::Error> {
-        let method = format!("/getUpdates{maybe_offset}",
-                             maybe_offset = match self.offset {
-                                 Some(val) => format!("?offset={}", val),
-                                 None => String::new(),
-                             });
+        let method = format!(
+            "/getUpdates{maybe_offset}",
+            maybe_offset = match self.offset {
+                Some(val) => format!("?offset={}", val),
+                None => String::new(),
+            }
+        );
 
         let result: Result<TelegramResult<Vec<Update>>, reqwest::Error> = self.get(&method);
         if result.is_ok() {
-            result.as_ref().unwrap().get_ref().into_iter().for_each(|update| {
-                self.offset = match self.offset {
-                    Some(val) => Some(std::cmp::max(val, update.update_id) + 1),
-                    None => Some(update.update_id + 1),
-                }
-            });
+            result
+                .as_ref()
+                .unwrap()
+                .get_ref()
+                .into_iter()
+                .for_each(|update| {
+                    self.offset = match self.offset {
+                        Some(val) => Some(std::cmp::max(val, update.update_id) + 1),
+                        None => Some(update.update_id + 1),
+                    }
+                });
         }
 
         result
@@ -113,9 +125,10 @@ impl TelegramBot {
         match self.goodreads.get_books(&query.query) {
             Ok(works) => {
                 info!("Received {} books from Goodreads", works.len());
-                let results = works.iter().map(|work| {
-                    InlineQueryResult::from(work)
-                }).collect();
+                let results = works
+                    .iter()
+                    .map(|work| InlineQueryResult::from(work))
+                    .collect();
 
                 let answer = AnswerInlineQuery {
                     inline_query_id: query.id,
@@ -123,16 +136,24 @@ impl TelegramBot {
                     ..Default::default()
                 };
 
-                match self.post("/answerInlineQuery", &answer): Result<TelegramResult<bool>, reqwest::Error> {
+                match self.post("/answerInlineQuery", &answer):
+                    Result<TelegramResult<bool>, reqwest::Error>
+                {
                     Ok(result) => {
-                        info!("Received a response from /answerInlineQuery: ok = {:#?}", &result.ok());
+                        info!(
+                            "Received a response from /answerInlineQuery: ok = {:#?}",
+                            &result.ok()
+                        );
                         if result.has_description() {
                             info!("description = {}", &result.description.as_ref().unwrap());
                         }
                         Ok(result.ok())
                     }
                     Err(e) => {
-                        error!("Did not receive a response from /answerInlineQuery. Error:\n{:#?}", &e);
+                        error!(
+                            "Did not receive a response from /answerInlineQuery. Error:\n{:#?}",
+                            &e
+                        );
                         Err(e)
                     }
                 }
@@ -144,7 +165,11 @@ impl TelegramBot {
         }
     }
 
-    pub fn send_message(&self, chat_id: u64, text: &str) -> Result<TelegramResult<Message>, reqwest::Error> {
+    pub fn send_message(
+        &self,
+        chat_id: u64,
+        text: &str,
+    ) -> Result<TelegramResult<Message>, reqwest::Error> {
         let request = SendMessageRequest {
             chat_id,
             text: String::from(text),

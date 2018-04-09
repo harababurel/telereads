@@ -1,4 +1,5 @@
-use super::{Chat, SuccessfulPayment, MessageEntity, User, Audio, Document, Game, PhotoSize, Sticker, Video, Voice, VideoNote, Contact, Location, Venue, Invoice};
+use super::{Audio, Chat, Contact, Document, Game, Invoice, Location, MessageEntity, PhotoSize,
+            Sticker, SuccessfulPayment, User, Venue, Video, VideoNote, Voice};
 
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Message {
@@ -82,4 +83,3 @@ pub struct Message {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub successful_payment: Option<SuccessfulPayment>,
 }
-

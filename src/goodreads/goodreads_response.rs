@@ -39,7 +39,6 @@ pub struct ResultsContainer {
     pub results: Vec<Work>,
 }
 
-
 #[derive(Deserialize, Debug, Default)]
 pub struct Work {
     #[serde(deserialize_with = "from_str")]
@@ -69,7 +68,6 @@ pub struct Work {
     pub best_book: Book,
 }
 
-
 #[derive(Deserialize, Debug, Default)]
 pub struct Book {
     #[serde(deserialize_with = "from_str")]
@@ -89,9 +87,10 @@ pub struct Author {
 
 // https://github.com/serde-rs/json/issues/317
 fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
-    where T: FromStr,
-          T::Err: Display,
-          D: Deserializer<'de>
+where
+    T: FromStr,
+    T::Err: Display,
+    D: Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
 
@@ -99,9 +98,10 @@ fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
 }
 
 fn from_str_option<'de, T, D>(deserializer: D) -> Result<Option<T>, D::Error>
-    where T: FromStr,
-          T::Err: Display,
-          D: Deserializer<'de>
+where
+    T: FromStr,
+    T::Err: Display,
+    D: Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
     if s.is_empty() {

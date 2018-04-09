@@ -16,11 +16,13 @@ pub struct User {
 
 impl User {
     pub fn full_name(&self) -> String {
-        format!("{first_name}{last_name}",
-                first_name = self.first_name,
-                last_name = match self.last_name {
-                    Some(ref name) => format!(" {}", name),
-                    None => String::new(),
-                })
+        format!(
+            "{first_name}{last_name}",
+            first_name = self.first_name,
+            last_name = match self.last_name {
+                Some(ref name) => format!(" {}", name),
+                None => String::new(),
+            }
+        )
     }
 }

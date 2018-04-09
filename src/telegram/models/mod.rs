@@ -39,4 +39,3 @@ pub use self::venue::Venue;
 pub use self::video::Video;
 pub use self::video_note::VideoNote;
 pub use self::voice::Voice;
-

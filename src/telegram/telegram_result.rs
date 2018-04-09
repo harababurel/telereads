@@ -12,7 +12,9 @@ pub struct TelegramResult<T: Debug> {
 }
 
 impl<T> TelegramResult<T>
-    where T: Debug {
+where
+    T: Debug,
+{
     pub fn ok(&self) -> bool {
         if self.ok && !self.result.is_some() {
             error!("TelegramResult is ok but the content is missing!");
@@ -34,4 +36,3 @@ impl<T> TelegramResult<T>
         self.result.as_ref().unwrap()
     }
 }
-
