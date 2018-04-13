@@ -1,9 +1,9 @@
 use super::{Location, User};
-use number_prefix::{decimal_prefix, Prefixed, Standalone};
-use std::convert::From;
-use goodreads::Work;
 use ammonia::clean;
 use ammonia::url::Url;
+use goodreads::Work;
+use number_prefix::{decimal_prefix, Prefixed, Standalone};
+use std::convert::From;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct InlineQuery {

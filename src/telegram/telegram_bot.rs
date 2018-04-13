@@ -1,12 +1,12 @@
+use goodreads::GoodreadsApi;
 use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
+use std;
+use std::fmt::Debug;
 use telegram::models::{AnswerInlineQuery, InlineQuery, InlineQueryResult, Message,
                        SendMessageRequest, Update, User};
 use telegram::TelegramResult;
-use goodreads::GoodreadsApi;
-use std;
-use std::fmt::Debug;
 
 pub struct TelegramBot {
     token: String,

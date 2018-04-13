@@ -1,8 +1,8 @@
+use super::{GoodreadsResponse, Work};
 use reqwest;
 use retry;
 use serde_xml_rs;
 use std::convert::From;
-use super::{GoodreadsResponse, Work};
 
 pub struct GoodreadsApi {
     token: String,
