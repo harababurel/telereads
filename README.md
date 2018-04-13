@@ -2,7 +2,7 @@
 
 [![Telegram](http://trellobot.doomdns.org/telegrambadge.svg)](https://telegram.me/TelereadsBot)
 [![Build Status](https://travis-ci.org/harababurel/telereads.svg?branch=master)](https://travis-ci.org/harababurel/telereads)
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/rubenlagus/TelegramBots/blob/master/LICENSE)
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/harababurel/telereads/blob/master/LICENSE)
 
 [@TelereadsBot](https://telegram.me/TelereadsBot) is an inline bot that allows you to search for books and quickly share them in a conversation.
 
