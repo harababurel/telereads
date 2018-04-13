@@ -90,12 +90,12 @@ impl<'a> From<&'a Work> for InlineQueryResult {
         let book_url = Url::parse_with_params(
             "https://www.goodreads.com/book/title",
             &[("id", &work.best_book.title)],
-        ).unwrap_or(Url::parse("https://www.goodreads.com").unwrap());
+        ).unwrap_or_else(|_| Url::parse("https://www.goodreads.com").unwrap());
 
         let author_url = Url::parse(&format!(
             "https://www.goodreads.com/book/author/{}",
             &work.best_book.author.name
-        )).unwrap_or(Url::parse("https://www.goodreads.com").unwrap());
+        )).unwrap_or_else(|_| Url::parse("https://www.goodreads.com").unwrap());
 
         let rating = match work.average_rating {
             Some(value) => format!("{:.1}", value),

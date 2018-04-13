@@ -16,7 +16,7 @@ where
     T: Debug,
 {
     pub fn ok(&self) -> bool {
-        if self.ok && !self.result.is_some() {
+        if self.ok && self.result.is_none() {
             error!("TelegramResult is ok but the content is missing!");
             error!("{:#?}", self);
         }
