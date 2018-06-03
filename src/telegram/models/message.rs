@@ -1,5 +1,7 @@
-use super::{Audio, Chat, Contact, Document, Game, Invoice, Location, MessageEntity, PhotoSize,
-            Sticker, SuccessfulPayment, User, Venue, Video, VideoNote, Voice};
+use super::{
+    Audio, Chat, Contact, Document, Game, Invoice, Location, MessageEntity, PhotoSize, Sticker,
+    SuccessfulPayment, User, Venue, Video, VideoNote, Voice,
+};
 
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Message {

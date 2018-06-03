@@ -4,8 +4,9 @@ use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use std;
 use std::fmt::Debug;
-use telegram::models::{AnswerInlineQuery, InlineQuery, InlineQueryResult, Message,
-                       SendMessageRequest, Update, User};
+use telegram::models::{
+    AnswerInlineQuery, InlineQuery, InlineQueryResult, Message, SendMessageRequest, Update, User,
+};
 use telegram::TelegramResult;
 
 pub struct TelegramBot {
@@ -64,7 +65,8 @@ impl TelegramBot {
     {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
 
-        Ok(self.client
+        Ok(self
+            .client
             .get(&url)
             .query(&[("timeout", 20)])
             .send()?

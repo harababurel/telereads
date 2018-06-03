@@ -1,5 +1,6 @@
-use super::{CallbackQuery, ChosenInlineQuery, InlineQuery, Message, PreCheckoutQuery,
-            ShippingQuery};
+use super::{
+    CallbackQuery, ChosenInlineQuery, InlineQuery, Message, PreCheckoutQuery, ShippingQuery,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Update {
