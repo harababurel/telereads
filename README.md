@@ -30,10 +30,8 @@ $ export GOODREADS_TOKEN="XXXXXXXXXXXXXXXXXXXX"
 Finally, you can run the bot:
 
 ```bash
-$ RUST_LOG=info cargo run --release
+$ RUST_LOG=info cargo +nightly run --release
 ```
-
-If this doesn't work, try the `nightly` branch of Rust.
 
 ## Contributing
 
