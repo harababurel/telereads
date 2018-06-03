@@ -36,12 +36,7 @@ impl TelegramBot {
                     for update in result.unwrap() {
                         update.inline_query.map(|query| {
                             if !&query.query.is_empty() {
-                                info!(
-                                    "Received inline query from {user}: \"{message}\"",
-                                    user =
-                                        &query.from.username.as_ref().unwrap_or(&"???".to_string()),
-                                    message = &query.query
-                                );
+                                info!("Received query: \"{message}\"", message = &query.query);
                             }
 
                             match self.answer_inline_query(query) {
