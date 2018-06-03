@@ -34,32 +34,31 @@ impl TelegramBot {
                     }
 
                     for update in result.unwrap() {
-                        if update.inline_query.is_some() {
-                            update.inline_query.map(|query| {
+                        update.inline_query.map(|query| {
+                            if !&query.query.is_empty() {
                                 info!(
                                     "Received inline query from {user}: \"{message}\"",
-                                    user = &query.from.full_name(),
+                                    user =
+                                        &query.from.username.as_ref().unwrap_or(&"???".to_string()),
                                     message = &query.query
                                 );
+                            }
 
-                                match self.answer_inline_query(query) {
-                                    Ok(success) => info!("Answer sent! Success = {}", success),
-                                    Err(e) => error!("Could not answer inline query: {:#?}", e),
-                                };
-                            });
-                        }
+                            match self.answer_inline_query(query) {
+                                Ok(success) => info!("Answer sent! Success = {}", success),
+                                Err(e) => error!("Could not answer inline query: {:#?}", e),
+                            };
+                        });
 
-                        if update.message.is_some() {
-                            update.message.map(|message| {
-                                match self.send_message(message.chat.id, "@TelereadsBot allows you to search for books on Goodreads and quickly send them to your chat partner.\n\nJust type @TelereadsBot in any chat, followed by a query (<i>i.e.</i> book title, ISBN, or author name), without pressing 'send'. You can choose any result from the pop-up window that will show up and send it by simply clicking on it.\n\nFor instance, try typing <code>@TelereadsBot lord of the rings</code> in this chat, and wait for the results to appear.") {
+                        update.message.map(|message| {
+                            match self.send_message(message.chat.id, "@TelereadsBot allows you to search for books on Goodreads and quickly send them to your chat partner.\n\nJust type @TelereadsBot in any chat, followed by a query (<i>i.e.</i> book title, ISBN, or author name), without pressing 'send'. You can choose any result from the pop-up window that will show up and send it by simply clicking on it.\n\nFor instance, try typing <code>@TelereadsBot lord of the rings</code> in this chat, and wait for the results to appear.") {
                                     Ok(_) => info!("Message successfully sent."),
                                     Err(e) => error!("Could not send message: {:#?}", e),
                                 };
-                            });
-                        }
+                        });
                     }
                 }
-                Err(e) => error!("get_updates() failed: {:#?}", e),
+                Err(e) => error!("Could not get updates: {}", e),
             };
         }
     }
@@ -69,7 +68,6 @@ impl TelegramBot {
         T: DeserializeOwned + Debug + Default,
     {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
-        info!("GET-ing {}", &url);
 
         Ok(self.client
             .get(&url)
@@ -84,7 +82,7 @@ impl TelegramBot {
         T: DeserializeOwned + Debug + Default,
     {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
-        info!("POST-ing {}", &url);
+        debug!("POST-ing {}", &url);
         debug!("Payload:\n{:#?}", &payload);
 
         Ok(self.client.post(&url).json(payload).send()?.json()?)
@@ -137,12 +135,12 @@ impl TelegramBot {
                     Result<TelegramResult<bool>, reqwest::Error>
                 {
                     Ok(result) => {
-                        info!(
+                        debug!(
                             "Received a response from /answerInlineQuery: ok = {:#?}",
                             &result.ok()
                         );
                         if result.has_description() {
-                            info!("description = {}", &result.description.as_ref().unwrap());
+                            debug!("description = {}", &result.description.as_ref().unwrap());
                         }
                         Ok(result.ok())
                     }

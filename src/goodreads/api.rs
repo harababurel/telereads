@@ -17,7 +17,6 @@ impl GoodreadsApi {
 
     fn get(&self, url: &str, params: &[(&str, &str)]) -> Result<GoodreadsResponse, GoodreadsError> {
         let url = reqwest::Url::parse_with_params(url, params)?;
-        info!("GET-ing {}", &url);
 
         let mut resp = retry::retry(
             3,
@@ -33,6 +32,10 @@ impl GoodreadsApi {
     }
 
     pub fn get_books(&self, query: &str) -> Result<Vec<Work>, GoodreadsError> {
+        if query.is_empty() {
+            return Ok(Vec::new());
+        }
+
         let goodreads_response = self.get(
             "https://www.goodreads.com/search/index.xml",
             &[("key", &self.token), ("q", query)],
