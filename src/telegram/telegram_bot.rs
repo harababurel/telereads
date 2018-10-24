@@ -13,7 +13,7 @@ pub struct TelegramBot {
     token: String,
     goodreads: GoodreadsApi,
     client: reqwest::Client,
-    offset: Option<u64>,
+    offset: Option<i64>,
 }
 
 impl TelegramBot {
@@ -128,9 +128,9 @@ impl TelegramBot {
                     ..Default::default()
                 };
 
-                match self.post("/answerInlineQuery", &answer):
-                    Result<TelegramResult<bool>, reqwest::Error>
-                {
+                let r: Result<TelegramResult<bool>, reqwest::Error> =
+                    self.post("/answerInlineQuery", &answer);
+                match r {
                     Ok(result) => {
                         debug!(
                             "Received a response from /answerInlineQuery: ok = {:#?}",
@@ -159,7 +159,7 @@ impl TelegramBot {
 
     pub fn send_message(
         &self,
-        chat_id: u64,
+        chat_id: i64,
         text: &str,
     ) -> Result<TelegramResult<Message>, reqwest::Error> {
         let request = SendMessageRequest {

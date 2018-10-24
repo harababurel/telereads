@@ -1,4 +1,3 @@
-#![feature(type_ascription)]
 extern crate ammonia;
 #[macro_use]
 extern crate log;

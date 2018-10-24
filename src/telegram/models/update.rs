@@ -4,7 +4,7 @@ use super::{
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Update {
-    pub update_id: u64,
+    pub update_id: i64,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub message: Option<Message>,

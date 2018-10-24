@@ -42,7 +42,7 @@ pub struct ResultsContainer {
 #[derive(Deserialize, Debug, Default)]
 pub struct Work {
     #[serde(deserialize_with = "from_str")]
-    pub id: u64,
+    pub id: i64,
 
     #[serde(deserialize_with = "from_str")]
     pub books_count: u32,
@@ -71,7 +71,7 @@ pub struct Work {
 #[derive(Deserialize, Debug, Default)]
 pub struct Book {
     #[serde(deserialize_with = "from_str")]
-    pub id: u64,
+    pub id: i64,
     pub title: String,
     pub author: Author,
     pub image_url: String,
@@ -81,7 +81,7 @@ pub struct Book {
 #[derive(Deserialize, Debug, Default)]
 pub struct Author {
     #[serde(deserialize_with = "from_str")]
-    pub id: u64,
+    pub id: i64,
     pub name: String,
 }
 
