@@ -5,7 +5,7 @@ description = "@TelereadsBot is an inline bot that allows you to search for book
 keywords = ["telegram", "bot", "goodreads", "books"]
 license = "MIT"
 repository = "https://github.com/harababurel/telereads"
-version = "0.1.1"
+version = "0.1.2"
 
 [dependencies]
 ammonia = "1.2.0"
