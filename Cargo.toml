@@ -1,7 +1,11 @@
 [package]
 name = "telereads"
-version = "0.1.1"
 authors = ["Sergiu Puscas <srg.pscs@gmail.com>"]
+description = "@TelereadsBot is an inline bot that allows you to search for books and quickly share them in a conversation."
+keywords = ["telegram", "bot", "goodreads", "books"]
+license = "MIT"
+repository = "https://github.com/harababurel/telereads"
+version = "0.1.1"
 
 [dependencies]
 ammonia = "1.0.1"
