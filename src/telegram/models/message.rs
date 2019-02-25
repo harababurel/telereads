@@ -5,25 +5,25 @@ use super::{
 
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct Message {
-    pub message_id: u64,
+    pub message_id: i64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub from: Option<User>,
-    pub date: u32,
+    pub date: i64,
     pub chat: Chat,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_from: Option<User>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_from_chat: Option<Chat>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub forward_from_message_id: Option<u64>,
+    pub forward_from_message_id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub forward_signature: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub forward_date: Option<u32>,
+    pub forward_date: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reply_to_message: Option<Box<Message>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub edit_date: Option<u32>,
+    pub edit_date: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub media_group_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -75,9 +75,9 @@ pub struct Message {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub channel_chat_created: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub migrate_to_chat_id: Option<u64>,
+    pub migrate_to_chat_id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub migrate_from_chat_id: Option<u64>,
+    pub migrate_from_chat_id: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinned_message: Option<Box<Message>>,
     #[serde(skip_serializing_if = "Option::is_none")]

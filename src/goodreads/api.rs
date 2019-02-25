@@ -26,7 +26,7 @@ impl GoodreadsApi {
         )??;
 
         let text: String = resp.text()?;
-        let goodreads_response: GoodreadsResponse = serde_xml_rs::deserialize(text.as_bytes())?;
+        let goodreads_response: GoodreadsResponse = serde_xml_rs::from_str(&text)?;
 
         Ok(goodreads_response)
     }

@@ -25,7 +25,7 @@ pub struct AnswerInlineQuery {
     pub results: Vec<InlineQueryResult>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub cache_time: Option<u32>,
+    pub cache_time: Option<i64>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub is_personal: Option<bool>,
@@ -68,9 +68,9 @@ pub enum InlineQueryResult {
         #[serde(skip_serializing_if = "Option::is_none")]
         thumb_url: Option<String>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        thumb_width: Option<u32>,
+        thumb_width: Option<i64>,
         #[serde(skip_serializing_if = "Option::is_none")]
-        thumb_height: Option<u32>,
+        thumb_height: Option<i64>,
     },
     InlineQueryResultAudio,
     InlineQueryResultContact,
