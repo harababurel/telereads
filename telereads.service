@@ -1,0 +1,21 @@
+# https://gist.github.com/whophil/5a2eab328d2f8c16bb31c9ceaf23164f
+
+[Unit]
+Description=Telereads
+
+[Service]
+Type=simple
+PIDFile=/run/telereads.pid
+Environment=RUST_LOG="html5ever::tree_builder=error,info"
+Environment=RUST_BACKTRACE=1
+Environment=TELEGRAM_TOKEN="#############################################"
+Environment=GOODREADS_TOKEN="####################"
+ExecStart=/path/to/telereads
+User=YOUR_USER
+Group=YOUR_GROUP
+WorkingDirectory=/path/to/telereads/dir
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
