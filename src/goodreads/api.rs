@@ -1,7 +1,4 @@
 use super::{GoodreadsResponse, Work};
-use reqwest;
-use retry;
-use serde_xml_rs;
 use std::convert::From;
 
 pub struct GoodreadsApi {

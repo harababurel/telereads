@@ -7,7 +7,6 @@ use crate::telegram::TelegramResult;
 use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
-use std;
 use std::fmt::Debug;
 
 pub struct TelegramBot {
@@ -36,7 +35,7 @@ impl TelegramBot {
                     }
 
                     for update in result.unwrap() {
-                        update.inline_query.map(|query| {
+                        if let Some(query) = update.inline_query {
                             if !&query.query.is_empty() {
                                 info!("Received query: \"{message}\"", message = &query.query);
                             }
@@ -45,14 +44,14 @@ impl TelegramBot {
                                 Ok(success) => info!("Answer sent! Success = {}", success),
                                 Err(e) => error!("Could not answer inline query: {:#?}", e),
                             };
-                        });
+                        };
 
-                        update.message.map(|message| {
+                        if let Some(message) = update.message {
                             match self.send_message(message.chat.id, "@TelereadsBot allows you to search for books on Goodreads and quickly send them to your chat partner.\n\nJust type @TelereadsBot in any chat, followed by a query (<i>i.e.</i> book title, ISBN, or author name), without pressing 'send'. You can choose any result from the pop-up window that will show up and send it by simply clicking on it.\n\nFor instance, try typing <code>@TelereadsBot lord of the rings</code> in this chat, and wait for the results to appear.") {
                                     Ok(_) => info!("Message successfully sent."),
                                     Err(e) => error!("Could not send message: {:#?}", e),
                                 };
-                        });
+                        };
                     }
                 }
                 Err(e) => error!("Could not get updates: {}", e),
@@ -65,13 +64,11 @@ impl TelegramBot {
         T: DeserializeOwned + Debug + Default,
     {
         let url = format!("https://api.telegram.org/bot{}{}", self.token, method);
-
-        Ok(self
-            .client
+        self.client
             .get(&url)
             .query(&[("timeout", 20)])
             .send()?
-            .json()?)
+            .json()
     }
 
     fn post<P, T>(&self, method: &str, payload: &P) -> Result<TelegramResult<T>, reqwest::Error>
@@ -83,7 +80,7 @@ impl TelegramBot {
         debug!("POST-ing {}", &url);
         debug!("Payload:\n{:#?}", &payload);
 
-        Ok(self.client.post(&url).json(payload).send()?.json()?)
+        self.client.post(&url).json(payload).send()?.json()
     }
 
     pub fn get_me(&self) -> Result<TelegramResult<User>, reqwest::Error> {
@@ -105,7 +102,7 @@ impl TelegramBot {
                 .as_ref()
                 .unwrap()
                 .get_ref()
-                .into_iter()
+                .iter()
                 .for_each(|update| {
                     self.offset = match self.offset {
                         Some(val) => Some(std::cmp::max(val, update.update_id) + 1),
