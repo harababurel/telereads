@@ -36,6 +36,7 @@ pub struct Search {
 #[derive(Deserialize, Debug)]
 pub struct ResultsContainer {
     #[serde(rename = "work")]
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub results: Vec<Work>,
 }
 
