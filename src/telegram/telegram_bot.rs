@@ -146,8 +146,9 @@ impl TelegramBot {
                             "Received a response from /answerInlineQuery: ok = {:#?}",
                             &result.ok()
                         );
-                        if result.has_description() {
-                            debug!("description = {}", &result.description.as_ref().unwrap());
+
+                        if let Some(description) = &result.description {
+                            debug!("description = {}", &description);
                         }
                         Ok(result.ok())
                     }
