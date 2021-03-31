@@ -26,3 +26,19 @@ impl User {
         )
     }
 }
+
+impl std::fmt::Display for User {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        if self.is_bot {
+            write!(fmt, "Bot ")?;
+        } else {
+            write!(fmt, "User ")?;
+        }
+        write!(fmt, "{}", self.full_name())?;
+
+        if let Some(username) = &self.username {
+            write!(fmt, " (@{})", username)?;
+        }
+        Ok(())
+    }
+}

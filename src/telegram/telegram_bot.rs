@@ -44,11 +44,21 @@ impl TelegramBot {
                     for update in result.unwrap() {
                         if let Some(query) = update.inline_query {
                             if !&query.query.is_empty() {
-                                info!("Received query: \"{message}\"", message = &query.query);
+                                info!(
+                                    "{user} wrote: \"{message}\"",
+                                    user = &query.from,
+                                    message = &query.query
+                                );
                             }
 
                             match self.answer_inline_query(query) {
-                                Ok(success) => info!("Answer sent! Success = {}", success),
+                                Ok(success) => {
+                                    if success {
+                                        info!("Telegram answer sent!");
+                                    } else {
+                                        error!("Telegram answer sent but goodreads query failed");
+                                    }
+                                }
                                 Err(e) => error!("Could not answer inline query: {:#?}", e),
                             };
                         };
