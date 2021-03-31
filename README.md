@@ -1,6 +1,6 @@
 # Telereads =  [Telegram](https://telegram.org/) + [Goodreads](https://www.goodreads.com/)
 
-[![Telegram](http://trellobot.doomdns.org/telegrambadge.svg)](https://telegram.me/TelereadsBot)
+[![Telegram](https://img.shields.io/badge/telegram-TelereadsBot-blue?logo=telegram&style=flat)](https://telegram.me/TelereadsBot)
 [![Build Status](https://travis-ci.org/harababurel/telereads.svg?branch=master)](https://travis-ci.org/harababurel/telereads)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/harababurel/telereads/blob/master/LICENSE)
 
@@ -27,10 +27,27 @@ $ export TELEGRAM_TOKEN="123456789:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 $ export GOODREADS_TOKEN="XXXXXXXXXXXXXXXXXXXX"
 ```
 
-Finally, you can run the bot:
+And then install and run TelereadsBot:
+
+### From GitHub
 
 ```bash
-$ RUST_LOG=info cargo +nightly run --release
+$ git clone https://github.com/harababurel/telereads.git
+$ cd telereads
+$ RUST_LOG=info cargo run --release
+```
+
+Aditionally, this repo includes a systemd service file ([telereads.service](https://github.com/harababurel/telereads/blob/master/telereads.service)) which can be used to deploy the bot. After setting the proper variables in the service file:
+
+```bash
+$ systemctl start telereads
+```
+
+### From crates.io
+
+```bash
+$ cargo install telereads
+$ RUST_LOG=info telereads
 ```
 
 ## Contributing
