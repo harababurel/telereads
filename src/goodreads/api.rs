@@ -1,6 +1,7 @@
 use super::{GoodreadsResponse, Work};
 use std::convert::From;
 
+#[derive(Debug)]
 pub struct GoodreadsApi {
     token: String,
 }
