@@ -1,18 +1,19 @@
-use goodreads::GoodreadsApi;
+use crate::goodreads::GoodreadsApi;
+use crate::telegram::models::{
+    AnswerInlineQuery, InlineQuery, InlineQueryResult, Message, SendMessageRequest, Update, User,
+};
+use crate::telegram::TelegramResult;
+#[cfg(feature = "json")]
 use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use std;
 use std::fmt::Debug;
-use telegram::models::{
-    AnswerInlineQuery, InlineQuery, InlineQueryResult, Message, SendMessageRequest, Update, User,
-};
-use telegram::TelegramResult;
 
 pub struct TelegramBot {
     token: String,
     goodreads: GoodreadsApi,
-    client: reqwest::Client,
+    client: reqwest::blocking::Client,
     offset: Option<i64>,
 }
 
@@ -21,7 +22,7 @@ impl TelegramBot {
         TelegramBot {
             token: String::from(telegram_token),
             goodreads: GoodreadsApi::with_token(goodreads_token),
-            client: reqwest::Client::new(),
+            client: reqwest::blocking::Client::new(),
             offset: None,
         }
     }

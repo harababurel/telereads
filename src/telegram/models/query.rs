@@ -1,8 +1,8 @@
 use super::{Location, User};
+use crate::goodreads::Work;
 use ammonia::clean;
 use ammonia::url::Url;
-use goodreads::Work;
-use number_prefix::{decimal_prefix, Prefixed, Standalone};
+use number_prefix::NumberPrefix;
 use std::convert::From;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -90,21 +90,23 @@ impl<'a> From<&'a Work> for InlineQueryResult {
         let book_url = Url::parse_with_params(
             "https://www.goodreads.com/book/title",
             &[("id", &work.best_book.title)],
-        ).unwrap_or_else(|_| Url::parse("https://www.goodreads.com").unwrap());
+        )
+        .unwrap_or_else(|_| Url::parse("https://www.goodreads.com").unwrap());
 
         let author_url = Url::parse(&format!(
             "https://www.goodreads.com/book/author/{}",
             &work.best_book.author.name
-        )).unwrap_or_else(|_| Url::parse("https://www.goodreads.com").unwrap());
+        ))
+        .unwrap_or_else(|_| Url::parse("https://www.goodreads.com").unwrap());
 
         let rating = match work.average_rating {
             Some(value) => format!("{:.1}", value),
             None => String::from("?"),
         };
 
-        let rating_count = match decimal_prefix(work.ratings_count as f32) {
-            Standalone(value) => format!("{}", value),
-            Prefixed(prefix, n) => format!("{:.0}{}", n, prefix),
+        let rating_count = match NumberPrefix::decimal(work.ratings_count as f32) {
+            NumberPrefix::Standalone(value) => format!("{}", value),
+            NumberPrefix::Prefixed(prefix, n) => format!("{:.0}{}", n, prefix),
         };
 
         let message_text = clean(&format!(

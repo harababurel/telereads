@@ -18,10 +18,10 @@ impl GoodreadsApi {
     fn get(&self, url: &str, params: &[(&str, &str)]) -> Result<GoodreadsResponse, GoodreadsError> {
         let url = reqwest::Url::parse_with_params(url, params)?;
 
-        let mut resp = retry::retry(
+        let resp = retry::retry(
             3,
             100,
-            || reqwest::get(url.to_owned()),
+            || reqwest::blocking::get(url.to_owned()),
             |result| result.is_ok(),
         )??;
 
@@ -48,7 +48,7 @@ impl GoodreadsApi {
 #[derive(Debug)]
 pub enum GoodreadsError {
     ReqwestError(reqwest::Error),
-    UrlError(reqwest::UrlError),
+    ParseError(ammonia::url::ParseError),
     SerdeXmlError(serde_xml_rs::Error),
     RetryError(retry::RetryError),
 }
@@ -59,9 +59,9 @@ impl From<reqwest::Error> for GoodreadsError {
     }
 }
 
-impl From<reqwest::UrlError> for GoodreadsError {
-    fn from(e: reqwest::UrlError) -> Self {
-        GoodreadsError::UrlError(e)
+impl From<ammonia::url::ParseError> for GoodreadsError {
+    fn from(e: ammonia::url::ParseError) -> Self {
+        GoodreadsError::ParseError(e)
     }
 }
 
