@@ -6,7 +6,7 @@ keywords = ["telegram", "bot", "goodreads", "books"]
 license = "MIT"
 repository = "https://github.com/harababurel/telereads"
 version = "0.1.5"
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 ammonia = "3.2"
