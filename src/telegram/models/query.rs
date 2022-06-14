@@ -43,15 +43,15 @@ pub struct AnswerInlineQuery {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(untagged)]
 pub enum InlineQueryResult {
-    InlineQueryResultCachedAudio,
-    InlineQueryResultCachedDocument,
-    InlineQueryResultCachedGif,
-    InlineQueryResultCachedMpeg4Gif,
-    InlineQueryResultCachedPhoto,
-    InlineQueryResultCachedSticker,
-    InlineQueryResultCachedVideo,
-    InlineQueryResultCachedVoice,
-    InlineQueryResultArticle {
+    CachedAudio,
+    CachedDocument,
+    CachedGif,
+    CachedMpeg4Gif,
+    CachedPhoto,
+    CachedSticker,
+    CachedVideo,
+    CachedVoice,
+    Article {
         #[serde(rename = "type")]
         _type: String,
         id: String,
@@ -72,17 +72,17 @@ pub enum InlineQueryResult {
         #[serde(skip_serializing_if = "Option::is_none")]
         thumb_height: Option<i64>,
     },
-    InlineQueryResultAudio,
-    InlineQueryResultContact,
-    InlineQueryResultGame,
-    InlineQueryResultDocument,
-    InlineQueryResultGif,
-    InlineQueryResultLocation,
-    InlineQueryResultMpeg4Gif,
-    InlineQueryResultPhoto,
-    InlineQueryResultVenue,
-    InlineQueryResultVideo,
-    InlineQueryResultVoice,
+    Audio,
+    Contact,
+    Game,
+    Document,
+    Gif,
+    Location,
+    Mpeg4Gif,
+    Photo,
+    Venue,
+    Video,
+    Voice,
 }
 
 impl<'a> From<&'a Work> for InlineQueryResult {
@@ -127,7 +127,7 @@ impl<'a> From<&'a Work> for InlineQueryResult {
             rating_count = rating_count
         );
 
-        InlineQueryResult::InlineQueryResultArticle {
+        InlineQueryResult::Article {
             _type: String::from("article"),
             id: work.id.to_string(),
             title: work.best_book.title.clone(),
