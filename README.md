@@ -1,7 +1,6 @@
 # Telereads =  [Telegram](https://telegram.org/) + [Goodreads](https://www.goodreads.com/)
 
 [![Telegram](https://img.shields.io/badge/telegram-TelereadsBot-blue?logo=telegram&style=flat)](https://telegram.me/TelereadsBot)
-[![Build Status](https://travis-ci.org/harababurel/telereads.svg?branch=master)](https://travis-ci.org/harababurel/telereads)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/harababurel/telereads/blob/master/LICENSE)
 
 [@TelereadsBot](https://telegram.me/TelereadsBot) is an inline bot that allows you to search for books and quickly share them in a conversation.
