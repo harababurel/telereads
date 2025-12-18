@@ -16,8 +16,12 @@ impl GoodreadsApi {
     fn get(&self, url: &str, params: &[(&str, &str)]) -> Result<GoodreadsResponse, GoodreadsError> {
         let url = reqwest::Url::parse_with_params(url, params)?;
 
+        let client = reqwest::blocking::Client::builder()
+            .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+            .build()?;
+
         let resp = retry::retry(retry::delay::Fixed::from_millis(100).take(3), || {
-            reqwest::blocking::get(url.to_owned())
+            client.get(url.to_owned()).send()
         })?;
 
         let text: String = resp.text()?;
