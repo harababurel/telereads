@@ -8,6 +8,7 @@ pub struct GoodreadsResponse {
 }
 
 #[derive(Deserialize, Debug)]
+#[allow(dead_code)]
 pub struct Search {
     pub query: String,
 
@@ -41,6 +42,7 @@ pub struct ResultsContainer {
 }
 
 #[derive(Deserialize, Debug, Default)]
+#[allow(dead_code)]
 pub struct Work {
     #[serde(deserialize_with = "from_str")]
     pub id: i64,
@@ -70,6 +72,7 @@ pub struct Work {
 }
 
 #[derive(Deserialize, Debug, Default)]
+#[allow(dead_code)]
 pub struct Book {
     #[serde(deserialize_with = "from_str")]
     pub id: i64,
@@ -80,6 +83,7 @@ pub struct Book {
 }
 
 #[derive(Deserialize, Debug, Default)]
+#[allow(dead_code)]
 pub struct Author {
     #[serde(deserialize_with = "from_str")]
     pub id: i64,

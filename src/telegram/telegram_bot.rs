@@ -3,8 +3,6 @@ use crate::telegram::models::{
     AnswerInlineQuery, InlineQuery, InlineQueryResult, Message, SendMessageRequest, Update, User,
 };
 use crate::telegram::TelegramResult;
-#[cfg(feature = "json")]
-use reqwest;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use std::fmt::Debug;

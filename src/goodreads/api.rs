@@ -45,6 +45,7 @@ impl GoodreadsApi {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub enum GoodreadsError {
     ReqwestError(reqwest::Error),
     ParseError(ammonia::url::ParseError),
