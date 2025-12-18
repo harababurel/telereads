@@ -46,6 +46,7 @@ impl GoodreadsApi {
 
 #[derive(Debug)]
 #[allow(dead_code)]
+#[allow(clippy::enum_variant_names)]
 pub enum GoodreadsError {
     ReqwestError(reqwest::Error),
     ParseError(ammonia::url::ParseError),

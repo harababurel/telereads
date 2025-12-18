@@ -56,7 +56,7 @@ pub enum InlineQueryResult {
         _type: String,
         id: String,
         title: String,
-        input_message_content: InputMessageContent,
+        input_message_content: Box<InputMessageContent>,
         #[serde(skip_serializing_if = "Option::is_none")]
         reply_markup: Option<InlineKeyboardMarkup>,
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -131,11 +131,11 @@ impl<'a> From<&'a Work> for InlineQueryResult {
             _type: String::from("article"),
             id: work.id.to_string(),
             title: work.best_book.title.clone(),
-            input_message_content: InputMessageContent::InputTextMessageContent {
+            input_message_content: Box::new(InputMessageContent::InputTextMessageContent {
                 message_text,
                 parse_mode: Some(String::from("HTML")),
                 disable_web_page_preview: None,
-            },
+            }),
             reply_markup: None,
             url: Some(book_url.to_string()),
             hide_url: Some(true),

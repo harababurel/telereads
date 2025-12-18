@@ -115,18 +115,13 @@ impl TelegramBot {
         );
 
         let result: Result<TelegramResult<Vec<Update>>, reqwest::Error> = self.get(&method);
-        if result.is_ok() {
-            result
-                .as_ref()
-                .unwrap()
-                .get_ref()
-                .iter()
-                .for_each(|update| {
-                    self.offset = match self.offset {
-                        Some(val) => Some(std::cmp::max(val, update.update_id) + 1),
-                        None => Some(update.update_id + 1),
-                    }
-                });
+        if let Ok(telegram_result) = &result {
+            telegram_result.get_ref().iter().for_each(|update| {
+                self.offset = match self.offset {
+                    Some(val) => Some(std::cmp::max(val, update.update_id) + 1),
+                    None => Some(update.update_id + 1),
+                }
+            });
         }
 
         result
