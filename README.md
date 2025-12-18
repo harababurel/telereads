@@ -52,3 +52,5 @@ $ RUST_LOG=info telereads
 ## Contributing
 
 Contributions are welcome. You can also help by reporting or fixing [bugs](https://github.com/harababurel/telereads/issues).
+
+[![Star History Chart](https://api.star-history.com/svg?repos=harababurel/telereads&type=date&legend=top-left)](https://www.star-history.com/#harababurel/telereads&type=date&legend=top-left)
