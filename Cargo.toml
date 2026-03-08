@@ -24,3 +24,10 @@ serde-xml-rs = "0.8"
 [profile.dist]
 inherits = "release"
 lto = "thin"
+
+[profile.release]
+opt-level = "z"      # optimize for size (vs "s" for slightly less aggressive)
+lto = true           # link-time optimization — big impact
+codegen-units = 1    # slower compile, better optimization
+strip = true         # strip symbols from binary
+panic = "abort"      # smaller panic handler (no unwinding)
